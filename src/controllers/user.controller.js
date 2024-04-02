@@ -212,4 +212,11 @@ const getCurrentUser = asyncHandler(async (req, res) => {
     .json(200, req.user, "current user fetched successfully");
 });
 
-export { registerUser, loginUser, logoutUser, refreshAccessToken };
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  refreshAccessToken,
+  changeCurrentPassword,
+  getCurrentUser,
+};

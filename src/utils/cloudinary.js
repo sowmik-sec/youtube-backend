@@ -24,4 +24,10 @@ const uploadOnCloudinary = async (localFilePath) => {
   }
 };
 
-export { uploadOnCloudinary };
+const extractPublicIdFromUrl = (url) => {
+  const parts = url.split("/");
+  const publicId = parts[parts.length - 1].split(".")[0];
+  return publicId;
+};
+
+export { uploadOnCloudinary, extractPublicIdFromUrl };

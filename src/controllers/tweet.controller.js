@@ -16,10 +16,11 @@ const createTweet = asyncHandler(async (req, res) => {
     }
 
     // create the tweet
-    const tweet = new Tweet({ content, owner: userId });
+    const tweet = await Tweet.create({ content, owner: userId });
 
-    // save the tweet to the database
-    await tweet.save();
+    if (!tweet) {
+      throw new ApiError(500, "failed to create tweet please try again");
+    }
 
     // send the response with the tweet
     return res

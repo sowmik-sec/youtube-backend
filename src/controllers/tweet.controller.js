@@ -47,4 +47,23 @@ const getUserTweets = asyncHandler(async (req, res) => {
   }
 });
 
-export { createTweet, getUserTweets };
+const updateTweet = asyncHandler(async (req, res) => {
+  try {
+    const tweetId = req.params.tweetId;
+    const { content } = req.body;
+    // check if the tweet exists
+    const tweet = await Tweet.findById(tweetId);
+    if (!tweet) {
+      throw new ApiError(404, "Tweet not found");
+    }
+    tweet.content = content;
+    await tweet.save();
+    return res
+      .status(200)
+      .json(new ApiResponse(200, tweet, "Tweet updated successfully"));
+  } catch (error) {
+    throw new ApiError(400, error?.message || "Tweet cannot be updated");
+  }
+});
+
+export { createTweet, getUserTweets, updateTweet };

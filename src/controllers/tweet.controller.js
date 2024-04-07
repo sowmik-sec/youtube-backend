@@ -66,4 +66,16 @@ const updateTweet = asyncHandler(async (req, res) => {
   }
 });
 
-export { createTweet, getUserTweets, updateTweet };
+const deleteTweet = asyncHandler(async (req, res) => {
+  try {
+    const tweetId = req.params.tweetId;
+    await Tweet.findByIdAndDelete(tweetId);
+    return res
+      .status(200)
+      .json(new ApiResponse(200, null, "Tweet deleted successfully"));
+  } catch (error) {
+    throw new ApiError(400, error?.message || "Tweet cannot be deleted");
+  }
+});
+
+export { createTweet, getUserTweets, updateTweet, deleteTweet };

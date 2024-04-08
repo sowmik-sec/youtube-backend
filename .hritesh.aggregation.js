@@ -50,3 +50,13 @@
     $count: "userWithEnimTag",
   },
 ];
+
+[
+  {
+    $match: {
+      isActive: false,
+      tags: "velit",
+      age: 20,
+    },
+  },
+];

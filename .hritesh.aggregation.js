@@ -66,3 +66,14 @@
     },
   },
 ];
+
+[
+  {
+    $match: {
+      "company.phone": /^\+1 \(940\)/,
+    },
+  },
+  {
+    $count: "usersWithSpecialPhoneNumber",
+  },
+];

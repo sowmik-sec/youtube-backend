@@ -104,3 +104,14 @@
     },
   },
 ];
+
+[
+  {
+    $match: {
+      "tags.1": "ad",
+    },
+  },
+  {
+    $count: "secondTagAd",
+  },
+];

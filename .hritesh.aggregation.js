@@ -39,3 +39,14 @@
     },
   },
 ];
+
+[
+  {
+    $match: {
+      tags: "id",
+    },
+  },
+  {
+    $count: "userWithEnimTag",
+  },
+];

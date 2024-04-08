@@ -95,3 +95,12 @@
     },
   },
 ];
+
+[
+  {
+    $group: {
+      _id: "$favoriteFruit",
+      users: { $push: "$name" },
+    },
+  },
+];

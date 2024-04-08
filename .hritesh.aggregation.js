@@ -115,3 +115,13 @@
     $count: "secondTagAd",
   },
 ];
+
+[
+  {
+    $match: {
+      tags: {
+        $all: ["enim", "id"],
+      },
+    },
+  },
+];

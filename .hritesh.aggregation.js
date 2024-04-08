@@ -19,3 +19,23 @@
     },
   },
 ];
+
+[
+  {
+    $addFields: {
+      numberOfTags: {
+        $size: {
+          $ifNull: ["$tags", []],
+        },
+      },
+    },
+  },
+  {
+    $group: {
+      _id: null,
+      averageNumberOfTags: {
+        $avg: "$numberOfTags",
+      },
+    },
+  },
+];

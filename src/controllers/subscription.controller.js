@@ -20,7 +20,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     channel: channelId,
   });
   if (subscription) {
-    await subscription.remove();
+    await Subscription.findByIdAndDelete(subscription?._id);
     return res
       .status(200)
       .json(

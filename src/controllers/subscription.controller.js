@@ -22,10 +22,18 @@ const toggleSubscription = asyncHandler(async (req, res) => {
   });
   if (subscription) {
     await subscription.remove();
-    return res.json(new ApiResponse(200, "Unsubscribed successfully"));
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200, { subscribed: false }, "Unsubscribed successfully")
+      );
   }
   await Subscription.create({ subscriber: userId, channel: channelId });
-  return res.json(new ApiResponse(200, "Subscribed successfully"));
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, { subscribed: true }, "Subscribed successfully")
+    );
 });
 
 export { toggleSubscription };

@@ -105,4 +105,74 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
     );
 });
 
+const getSubscribedChannels = asyncHandler(async (req, res) => {
+  const { subscriberId } = req.params;
+  if (!isValidObjectId(subscriberId)) {
+    throw new ApiError(400, "Invalid subscriber id");
+  }
+  const subscribedChannels = await Subscription.aggregate([
+    {
+      $match: {
+        subscriber: new mongoose.Types.ObjectId(subscriberId),
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "channel",
+        foreignField: "_id",
+        as: "subscribedChannel",
+        pipeline: [
+          {
+            $lookup: {
+              from: "videos",
+              localField: "_id",
+              foreignField: "owner",
+              as: "videos",
+            },
+          },
+          {
+            $addFields: {
+              latestVideo: {
+                $last: "$videos",
+              },
+            },
+          },
+        ],
+      },
+    },
+    {
+      $unwind: "$subscribedChannel",
+    },
+    {
+      $project: {
+        _id: 0,
+        username: 1,
+        fullName: 1,
+        "avatar.url": 1,
+        latestVideo: {
+          _id: 1,
+          "videoFile.url": 1,
+          "thumbnail.url": 1,
+          owner: 1,
+          title: 1,
+          description: 1,
+          duration: 1,
+          createdAt: 1,
+          views: 1,
+        },
+      },
+    },
+  ]);
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        subscribedChannels,
+        "Subscribed channels fetched successfully"
+      )
+    );
+});
+
 export { toggleSubscription, getUserChannelSubscribers };

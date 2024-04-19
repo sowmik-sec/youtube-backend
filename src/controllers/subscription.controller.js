@@ -147,19 +147,22 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
     {
       $project: {
         _id: 0,
-        username: 1,
-        fullName: 1,
-        "avatar.url": 1,
-        latestVideo: {
+        subscribedChannel: {
           _id: 1,
-          "videoFile.url": 1,
-          "thumbnail.url": 1,
-          owner: 1,
-          title: 1,
-          description: 1,
-          duration: 1,
-          createdAt: 1,
-          views: 1,
+          username: 1,
+          fullName: 1,
+          "avatar.url": 1,
+          latestVideo: {
+            _id: 1,
+            "videoFile.url": 1,
+            "thumbnail.url": 1,
+            owner: 1,
+            title: 1,
+            description: 1,
+            duration: 1,
+            createdAt: 1,
+            views: 1,
+          },
         },
       },
     },
@@ -170,9 +173,9 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
       new ApiResponse(
         200,
         subscribedChannels,
-        "Subscribed channels fetched successfully"
+        "subscribed channels fetched successfully"
       )
     );
 });
 
-export { toggleSubscription, getUserChannelSubscribers };
+export { toggleSubscription, getUserChannelSubscribers, getSubscribedChannels };

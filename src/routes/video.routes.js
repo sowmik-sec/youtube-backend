@@ -8,6 +8,7 @@ import {
   publishAVideo,
   updateVideo,
   deleteVideo,
+  togglePublishStatus,
 } from "../controllers/video.controller";
 
 const router = Router();
@@ -36,5 +37,7 @@ router
   .get(getVideoById)
   .delete(deleteVideo)
   .patch(upload.single("thumbnail", updateVideo));
+
+router.route("/toggle/publish/:videoId").patch(verifyJWT, togglePublishStatus);
 
 export default router;

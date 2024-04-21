@@ -6,6 +6,7 @@ import {
   getAllVideos,
   getVideoById,
   publishAVideo,
+  updateVideo,
 } from "../controllers/video.controller";
 
 const router = Router();
@@ -29,6 +30,9 @@ router
     publishAVideo
   );
 
-router.route("/:videoId").get(getVideoById);
+router
+  .route("/:videoId")
+  .get(getVideoById)
+  .patch(upload.single("thumbnail", updateVideo));
 
 export default router;

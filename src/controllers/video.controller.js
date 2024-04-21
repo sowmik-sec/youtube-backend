@@ -81,4 +81,69 @@ const getVideoById = asyncHandler(async (req, res) => {
   return res.json(new ApiResponse(video));
 });
 
-export { getAllVideos, publishAVideo, getVideoById };
+const updateVideo = asyncHandler(async (req, res) => {
+  const { videoId } = req.params;
+  // update video details like title, description, thumbnail
+  const { title, description } = req.body;
+
+  if (!isValidObjectId(videoId)) {
+    throw new ApiError(404, "Video not found");
+  }
+  if (!(title && description)) {
+    throw new ApiError(400, "title and description are required");
+  }
+  const video = await Video.findById(videoId);
+  if (!video) {
+    throw new ApiError(404, "No video found");
+  }
+
+  if (video?.owner.toString() !== req.user?._id.toString()) {
+    throw new ApiError(
+      400,
+      "You can't edit this video as you are not the owner"
+    );
+  }
+  //deleting old thumbnail and updating with new one
+  const thumbnailToDelete = video.thumbnail.public_id;
+
+  const thumbnailLocalPath = req.file?.path;
+
+  if (!thumbnailLocalPath) {
+    throw new ApiError(400, "thumbnail is required");
+  }
+
+  const thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
+
+  if (!thumbnail) {
+    throw new ApiError(400, "thumbnail not found");
+  }
+
+  const updatedVideo = await Video.findByIdAndUpdate(
+    videoId,
+    {
+      $set: {
+        title,
+        description,
+        thumbnail: {
+          public_id: thumbnail.public_id,
+          url: thumbnail.url,
+        },
+      },
+    },
+    { new: true }
+  );
+
+  if (!updatedVideo) {
+    throw new ApiError(500, "Failed to update video please try again");
+  }
+
+  if (updatedVideo) {
+    await deleteOnCloudinary(thumbnailToDelete);
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updatedVideo, "Video updated successfully"));
+});
+
+export { getAllVideos, publishAVideo, getVideoById, updateVideo };

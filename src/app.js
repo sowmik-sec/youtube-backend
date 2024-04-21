@@ -25,11 +25,13 @@ app.use(cookieParser());
 
 // routes import
 
+import { healthCheck } from "./controllers/healthcheck.controller.js";
 import userRouter from "./routes/user.routes.js";
 import tweetRouter from "./routes/tweet.routes.js";
 import subscriptionRouter from "./routes/subscription.routes.js";
 
 // routes declaration
+app.use("/api/v1/healthcheck", healthCheck);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/tweets", tweetRouter);
 app.use("/api/v1/subscriptions", subscriptionRouter);

@@ -79,4 +79,22 @@ const updateComment = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, updateContent, "Comment updated successfully"));
 });
 
-export { getVideoComments, addComment, updateComment };
+const deleteComment = asyncHandler(async (req, res) => {
+  const { commentId } = req.params;
+  const comment = await Comment.findById(commentId);
+  if (!comment) {
+    throw new ApiError(404, "Comment not found");
+  }
+  if (comment.owner.toString() !== req.user._id.toString()) {
+    throw new ApiError(403, "You are not allowed to delete this comment");
+  }
+  const deleteComment = await Comment.findByIdAndDelete(commentId);
+  if (!deleteComment) {
+    throw new ApiError(500, "failed to delete comment please try again");
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, deleteComment, "Comment deleted successfully"));
+});
+
+export { getVideoComments, addComment, updateComment, deleteComment };

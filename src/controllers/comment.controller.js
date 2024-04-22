@@ -49,4 +49,34 @@ const addComment = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, comment, "Comment added successfully"));
 });
 
-export { getVideoComments, addComment };
+const updateComment = asyncHandler(async (req, res) => {
+  const { commentId } = req.params;
+  const { content } = req.body;
+  if (!content) {
+    throw new ApiError(400, "Content is required");
+  }
+  const comment = await Comment.findById(commentId);
+  if (!comment) {
+    throw new ApiError(404, "Comment not found");
+  }
+  if (comment.owner.toString() !== req.user._id.toString()) {
+    throw new ApiError(403, "You are not allowed to update this comment");
+  }
+  const updateContent = await Comment.findByIdAndUpdate(
+    comment?._id,
+    {
+      $set: {
+        content,
+      },
+    },
+    { new: true }
+  );
+  if (!updateContent) {
+    throw new ApiError(500, "failed to update comment please try again");
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updateContent, "Comment updated successfully"));
+});
+
+export { getVideoComments, addComment, updateComment };

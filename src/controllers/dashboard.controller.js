@@ -74,4 +74,12 @@ const getChannelStats = asyncHandler(async (req, res) => {
     );
 });
 
-export { getChannelStats };
+const getChannelVideos = asyncHandler(async (req, res) => {
+  const { channelId } = req.params;
+  const videos = await Video.find({ owner: channelId });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, videos, "Channel videos fetched successfully"));
+});
+
+export { getChannelStats, getChannelVideos };

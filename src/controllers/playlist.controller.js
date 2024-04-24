@@ -94,5 +94,4 @@ export {
   getUserPlaylists,
   getPlaylistById,
   addVideoToPlaylist,
-  updatedPlaylist,
 };

@@ -22,4 +22,17 @@ const createPlaylist = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, playlist, "Playlist created successfully"));
 });
 
-export { createPlaylist };
+const getUserPlaylists = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  if (!isValidObjectId(userId)) {
+    throw new ApiError(400, "Invalid user id");
+  }
+  const playlists = await Playlist.find({ owner: userId });
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, playlists, "User playlists retrieved successfully")
+    );
+});
+
+export { createPlaylist, getUserPlaylists };

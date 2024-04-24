@@ -4,6 +4,7 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 import {
   addVideoToPlaylist,
   createPlaylist,
+  deletePlaylist,
   getPlaylistById,
   getUserPlaylists,
   removeVideoFromPlaylist,
@@ -16,7 +17,11 @@ router.use(verifyJWT);
 
 router.route("/").post(createPlaylist);
 
-router.route("/:playlistId").get(getPlaylistById).patch(addVideoToPlaylist);
+router
+  .route("/:playlistId")
+  .get(getPlaylistById)
+  .patch(addVideoToPlaylist)
+  .delete(deletePlaylist);
 
 router.route("/remove/:videoId/:playlistId").patch(removeVideoFromPlaylist);
 
